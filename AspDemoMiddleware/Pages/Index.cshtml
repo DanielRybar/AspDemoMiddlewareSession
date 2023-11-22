@@ -1,0 +1,53 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Úkoly</h1>
+    @if(Model.TaskItems.Count == 0)
+    {
+        <p>Zatím zde nejsou žádné úkoly.</p>
+    }
+    else
+    {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Název</th>
+                    <th>Datum</th>
+                    <th>Stav</th>
+                    <th>Akce</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in @Model.TaskItems)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.End</td>
+                        <td>
+                            <a class=@(item.IsCompleted ? "btn btn-warning" : "btn btn-primary") 
+                                asp-page-handler="Finished" 
+                                asp-route-id="@item.Id">@(item.IsCompleted ? "Obnovit" : "Dokončit")</a>
+                        </td>
+                        <td>
+                            <a class="btn btn-danger" asp-page-handler="DeleteTask" asp-route-taskId="@item.Id">Smazat</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <h2 class="display-6">Počet úkolů: @Model.TaskItems.Count</h2>
+        <h2 class="display-6">Dokončené úkoly: @Model.TaskItems.Where(x => x.IsCompleted).Count()</h2>
+    }
+</div>
+
+<div>
+    <a class="btn btn-secondary" asp-page-handler="AddTask">Přidat úkol</a>
+    @if(Model.TaskItems.Count > 0)
+    {
+        <a class="btn btn-danger" asp-page-handler="RemoveAll">Smazat vše</a>
+    }
+</div>
